@@ -61,6 +61,8 @@ type RunnerParams struct {
 	PullRemote     bool   // --pull option
 	PollFreq       int    // Polling frequency
 	DockerEndpoint string // docker enndpoint
+	ConfigureID    string // server configuration ID
+	OverrideImage  string // docker image override
 	// following values are set during processing
 	Basename   string // base name for container creation
 	Logger     *util.LogEntry
@@ -100,8 +102,7 @@ func (cp *RunnerParams) RunDockerController(statusOnly bool) {
 	}
 	cp.client = cli
 
-	// Pickup proper image from local repository to be used for this run. WE are not checking
-	// for a newer version from the remote repository.
+	// Pickup proper image from local repository to be used for this run.
 	image, err := cp.getLocalImage()
 	if err != nil {
 		cp.Logger.Fatal(fmt.Sprintf("unable to access external runner Docker image: %s", err))
@@ -247,6 +248,9 @@ func (cp *RunnerParams) createTheRunnerCommand(name string) ([]string, error) {
 	cmd = append(cmd, fmt.Sprintf("--runner-api-token=%s", cp.BearerToken))
 	if cp.GroupName != "" {
 		cmd = append(cmd, fmt.Sprintf("--runner-group=%s", cp.GroupName))
+	} else {
+		// Default the group name to the name of the runner(s)
+		cmd = append(cmd, fmt.Sprintf("--runner-group=%s", cp.Basename))
 	}
 	if cp.OrgList != "" {
 		cmd = append(cmd, fmt.Sprintf("--runner-orgs=%s", cp.OrgList))
@@ -259,6 +263,9 @@ func (cp *RunnerParams) createTheRunnerCommand(name string) ([]string, error) {
 	}
 	if cp.StorePath != "" {
 		cmd = append(cmd, fmt.Sprintf("--runner-store-path=%s", cp.StorePath))
+	}
+	if cp.ConfigureID != "" {
+		cmd = append(cmd, fmt.Sprintf("--runner-config-id=%s", cp.ConfigureID))
 	}
 	if cp.Debug == true {
 		cmd = append(cmd, "-d")

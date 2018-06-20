@@ -464,6 +464,8 @@ func setupExternalRunnerParams(c *cli.Context, params *external.RunnerParams) er
 	params.DockerEndpoint = opts.DockerEndpoint
 	params.Logger = cliLogger
 	params.ProdType = opts.Production
+	params.ConfigureID = opts.ConfigID
+	params.OverrideImage = opts.ImageName
 
 	return nil
 }

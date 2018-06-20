@@ -81,6 +81,10 @@ func (cp *RunnerParams) getRemoteImage() (*LatestImage, error) {
 		theWrapper := listWrapper{}
 		json.Unmarshal([]byte(bodyString), &theWrapper)
 
+		// For production we always accept 'latest'
+		// For non-production, we always accept most recent master. For anyone that wants
+		// to runs with a specific image they must first pull it into local and then
+		// specify it with the image override.
 		for _, imageItem := range theWrapper.Imgs {
 			tm, err := time.Parse(time.RFC3339, imageItem.Timestamp)
 			if err != nil {
@@ -88,7 +92,14 @@ func (cp *RunnerParams) getRemoteImage() (*LatestImage, error) {
 				continue
 			}
 
-			if tm.After(latestImageTime) {
+			if cp.ProdType && imageItem.Tag == "latest" {
+				// Always accept latest as it implies production.
+				latestImageTime = tm
+				latestImageName = fmt.Sprintf("%s:%s", basis, imageItem.Tag)
+				break
+			}
+			// Only pickup the most recent master
+			if strings.Contains(imageItem.Tag, "master") && tm.After(latestImageTime) {
 				latestImageTime = tm
 				latestImageName = fmt.Sprintf("%s:%s", basis, imageItem.Tag)
 			}

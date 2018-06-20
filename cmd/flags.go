@@ -290,6 +290,8 @@ var (
 		cli.StringFlag{Name: "token", Usage: "bearer token for external runner", EnvVar: "WERCKER_RUNNER_TOKEN"},
 		cli.BoolFlag{Name: "all", Usage: "specify that all jobs allowed to the user are eligible for selection by this runner"},
 		cli.BoolFlag{Name: "nowait", Usage: "run the external runner(s) in the background, default is false"},
+		cli.StringFlag{Name: "config-id", Usage: "indentifier to select the desired server-side configuration"},
+		cli.StringFlag{Name: "image-name", Usage: "docker image override for development purposes", Hidden: true},
 	}
 )
 

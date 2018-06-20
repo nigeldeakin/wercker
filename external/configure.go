@@ -25,38 +25,81 @@ func (cp *RunnerParams) getDockerClient() error {
 // Describe the local image and return the Image structure
 func (cp *RunnerParams) getLocalImage() (*docker.Image, error) {
 
-	opts := docker.ListImagesOptions{
-		All: true,
-	}
-
-	// Find the image containing 'wercker/wercker-runner:external-runner"
-	images, err := cp.client.ListImages(opts)
-	if err != nil {
-		return nil, err
-	}
-
-	// Dynamically figure out the image name based on a known static string embedded in
-	// the repository tag. This allows different repository prefixs and version information
-	// in the tail end of the tag. When more than one instance is found then take the
-	// most recent image.
-
 	var imageName string
-	var latest int64 = 0
-	for _, image := range images {
-		for _, slice := range image.RepoTags {
-			if strings.Contains(slice, "wercker/wercker-runner:") {
-				if latest < image.Created {
-					latest = image.Created
-					imageName = slice
-					break
+
+	// Allow a Docker image override. If present then the image must reside in the local repository.
+	if !cp.ProdType && cp.OverrideImage != "" {
+		imageName = cp.OverrideImage
+	} else {
+
+		// Do the regular thingy...
+		opts := docker.ListImagesOptions{
+			All: true,
+		}
+
+		// Get the list of local images in repo.
+		images, err := cp.client.ListImages(opts)
+		if err != nil {
+			return nil, err
+		}
+
+		// Dynamically figure out the image name based on a known static string embedded in
+		// the repository tag. This allows different repository prefixs and version information
+		// in the tail end of the tag. When more than one instance is found then take the
+		// most recent image.
+
+		var taggedLatest string // Remember if latest found
+
+		var latest int64 = 0
+		for _, image := range images {
+			for _, slice := range image.RepoTags {
+				if strings.Contains(slice, "wercker/wercker-runner:") {
+					if strings.Contains(slice, ":latest") {
+						// remember the one tagged as latest
+						taggedLatest = slice
+					}
+					if latest < image.Created {
+						latest = image.Created
+						imageName = slice
+						break
+					}
 				}
 			}
 		}
+		if imageName == "" {
+			// Nothing was foind in the repo
+			return nil, nil
+		}
+
+		// For production, accept tagged as latest or master when no latest. Otherwise take
+		// the most recent image regardless of tag.
+		if cp.ProdType {
+			if taggedLatest != "" {
+				cp.ImageName = taggedLatest
+			} else {
+				imageName = ""
+				// A bit more painful. Look for most recent master.
+				for _, image := range images {
+					for _, slice := range image.RepoTags {
+						if strings.Contains(slice, "wercker/wercker-runner:master") {
+							if latest < image.Created {
+								latest = image.Created
+								imageName = slice
+								break
+							}
+						}
+					}
+				}
+				if imageName == "" {
+					// No acceptable image so let caller issue error message
+					return nil, nil
+				}
+			}
+		} else {
+			// Not production so just take the most recent image regardless.
+			cp.ImageName = imageName
+		}
 	}
-	if imageName == "" {
-		return nil, nil
-	}
-	cp.ImageName = imageName
 
 	image, err := cp.client.InspectImage(cp.ImageName)
 	if err != nil {
