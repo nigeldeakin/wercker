@@ -105,7 +105,7 @@ func (cp *RunnerParams) CheckRegistryImages() error {
 			if cp.PullRemote {
 				return cp.pullNewerImage(remoteImage.ImageName)
 			} else {
-				message := "There is a newer external runner image available from Oracle."
+				message := "There is a newer runner image available from Oracle."
 				cp.Logger.Info(message)
 				cp.Logger.Info(fmt.Sprintf("Image: %s, created: %s",
 					remoteImage.ImageName, remoteImage.Created))
@@ -116,10 +116,10 @@ func (cp *RunnerParams) CheckRegistryImages() error {
 	}
 
 	if localImage == nil {
-		cp.Logger.Infoln("No Docker external runner image exists in the local repository.")
+		cp.Logger.Infoln("No Docker runner image exists in the local repository.")
 		cp.Logger.Fatal("Execute \"wercker runner configure --pull\" to pull the required image.")
 	} else {
-		message := "Local Docker repository external runner image is up-to-date."
+		message := "Local Docker repository runner image is up-to-date."
 		cp.Logger.Infoln(message)
 		cp.Logger.Infoln(fmt.Sprintf("Image: %s, created: %s", cp.ImageName, localImage.Created))
 	}

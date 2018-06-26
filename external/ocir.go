@@ -151,10 +151,10 @@ func (cp *RunnerParams) pullNewerImage(imageName string) error {
 	err := cp.client.PullImage(opts, auth)
 
 	if err != nil {
-		message := fmt.Sprintf("Failed to update external runner image: %s", err)
+		message := fmt.Sprintf("Failed to update runner image: %s", err)
 		cp.Logger.Error(message)
 	} else {
-		message := fmt.Sprintf("Pulled newer external runner Docker image")
+		message := fmt.Sprintf("Pulled newer runner Docker image")
 		cp.Logger.Infoln(message)
 		message = fmt.Sprintf("Image: %s", imageName)
 		cp.Logger.Infoln(message)
