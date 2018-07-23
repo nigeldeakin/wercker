@@ -2,6 +2,7 @@ box: golang:1.10
 no-response-timeout: 15
 
 build:
+  docker: true
   base-path: /go/src/github.com/wercker/wercker
   steps:
     - install-packages:
@@ -26,6 +27,22 @@ build:
     - script:
         name: go test
         code: govendor test -v +local
+
+    - script: 
+        name: Install docker CLI (needed by integration tests)
+        code: |
+          apt-get update
+          yes | apt-get install apt-transport-https ca-certificates curl software-properties-common
+          curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+          add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable"
+          apt-get update
+          yes | apt-get install docker-ce  
+
+    - script:
+        code: |
+          #unset WERCKER_BUILD_ID
+          go build
+          ./test-all.sh    
 
     - script:
         name: clear out the build binaries
@@ -104,19 +121,6 @@ deploy:
         bucket-url: $AWS_BUCKET_URL/$WERCKER_GIT_BRANCH/
         key-id: $AWS_ACCESS_KEY_ID
         key-secret: $AWS_SECRET_ACCESS_KEY
-
-#
-
-run-tests:
-  box:
-    id: golang:1.7
-    volumes: $CODE_PATH /var/run/docker.sock
-  steps:
-      - script:
-          code: |
-              unset WERCKER_BUILD_ID
-              cd $CODE_PATH
-              ./test-all.sh
 
 release-stable:
   steps:
