@@ -96,26 +96,26 @@ testScratchPush () {
 
 
 runTests() {
-  source $testsDir/rdd/test.sh || return 1
-  source $testsDir/rdd-volumes/test.sh || return 1
-  source $testsDir/enable-volumes/test.sh || return 1
-  source $testsDir/direct-mount-test/test.sh || return 1
-  source $testsDir/docker-push/test.sh || return 1
-  source $testsDir/docker-build/test.sh || return 1
-  source $testsDir/docker-push-image/test.sh || return 1
-  source $testsDir/docker-networks/test.sh || return 1
-  source $testsDir/docker-kill/test.sh || return 1
+  #source $testsDir/rdd/test.sh || return 1
+  #source $testsDir/rdd-volumes/test.sh || return 1
+  #source $testsDir/enable-volumes/test.sh || return 1
+  #source $testsDir/direct-mount-test/test.sh || return 1
+  #source $testsDir/docker-push/test.sh || return 1
+  #source $testsDir/docker-build/test.sh || return 1
+  #source $testsDir/docker-push-image/test.sh || return 1
+  #source $testsDir/docker-networks/test.sh || return 1
+  #source $testsDir/docker-kill/test.sh || return 1
 
   export X_TEST_SERVICE_VOL_PATH=$testsDir/test-service-vol
-  basicTest "docker run" build "$testsDir/docker-run" --docker-local || return 1
-  basicTest "source-path"       build "$testsDir/source-path" --docker-local || return 1
-  basicTest "rm pipeline --artifacts" build "$testsDir/rm-pipeline" --docker-local --artifacts  || return 1
-  basicTest "rm pipeline"       build "$testsDir/rm-pipeline" --docker-local || return 1
-  basicTest "local services"    build "$testsDir/local-service/service-consumer" --docker-local || return 1
-  basicTest "deploy"            deploy "$testsDir/deploy-no-targets" --docker-local || return 1
-  basicTest "deploy target"     deploy "$testsDir/deploy-targets" --docker-local  --deploy-target test || return 1
+  #basicTest "docker run" build "$testsDir/docker-run" --docker-local || return 1
+  #basicTest "source-path"       build "$testsDir/source-path" --docker-local || return 1
+  #basicTest "rm pipeline --artifacts" build "$testsDir/rm-pipeline" --docker-local --artifacts  || return 1
+  #basicTest "rm pipeline"       build "$testsDir/rm-pipeline" --docker-local || return 1
+  #basicTest "local services"    build "$testsDir/local-service/service-consumer" --docker-local || return 1
+  #basicTest "deploy"            deploy "$testsDir/deploy-no-targets" --docker-local || return 1
+  #basicTest "deploy target"     deploy "$testsDir/deploy-targets" --docker-local  --deploy-target test || return 1
   basicTest "after steps"       build "$testsDir/after-steps-fail" --docker-local --pipeline build_true  || return 1
-  basicTest "relative symlinks" build "$testsDir/relative-symlinks" --docker-local || return 1
+  #basicTest "relative symlinks" build "$testsDir/relative-symlinks" --docker-local || return 1
 
   #return 1
 
@@ -183,5 +183,5 @@ runTests() {
 }
 
 pullImages
-runTests
+runTests || exit 1
 rm -rf "$workingDir"
