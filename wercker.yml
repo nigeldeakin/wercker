@@ -39,11 +39,13 @@ build:
           yes | apt-get install docker-ce  
 
     - script:
+        name: Integration tests
         code: |
           #unset WERCKER_BUILD_ID
+          echo Running go build
           go build
+          echo Running integration tests
           ./test-all.sh    
-
     - script:
         name: clear out the build binaries
         code: rm -rf $GOPATH/pkg
