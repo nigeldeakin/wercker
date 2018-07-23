@@ -452,16 +452,16 @@ func (b *DockerBox) Run(ctx context.Context, env *util.Environment, rddURI strin
 
 	binds := []string{}
 	stepsMounted := false
-	if rddURI == "" || b.dockerOptions.RddServiceURI == "" {
-		// We haven't specified direct docker access or we're running CLI locally, so CLI is running on same host as daemon
-		// Obtain the binds necessary to mount the step directories under HostPath (which is a pipeline option).
-		extraBinds, err := b.mounts(env)
-		if err != nil {
-			return nil, err
-		}
-		binds = append(binds, extraBinds...)
-		stepsMounted = true
-	}
+	// if rddURI == "" {
+	// 	// We haven't specified direct docker access or we're running CLI locally, so CLI is running on same host as daemon
+	// 	// Obtain the binds necessary to mount the step directories under HostPath (which is a pipeline option).
+	// 	extraBinds, err := b.mounts(env)
+	// 	if err != nil {
+	// 		return nil, err
+	// 	}
+	// 	binds = append(binds, extraBinds...)
+	// 	stepsMounted = true
+	// }
 	if b.options.EnableVolumes {
 		// Obtain the binds necessary to mount the volumes defined in Volumes (which is a pipeline option).
 		volBinds, err := b.vols(env)
