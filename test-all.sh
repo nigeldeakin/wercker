@@ -19,6 +19,7 @@ testsDir=$PWD/tests/projects
 rootDir=$PWD
 
 # Make sure we have a working directory
+rm -rf "$workingDir" | true
 mkdir -p "$workingDir"
 if [ ! -e "$wercker" ]; then
   go build
@@ -50,7 +51,9 @@ basicTest() {
   testName=$1
   shift
   printf "testing %s... " "$testName"
-  $wercker --debug $@ --working-dir "$workingDir" &> "${workingDir}/${testName}.log"
+  echo Doing: $wercker $@ 
+
+  $wercker $@ 
   if [ $? -ne 0 ]; then
     printf "failed\n"
     cat "${workingDir}/${testName}.log"
