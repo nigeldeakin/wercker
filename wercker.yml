@@ -25,10 +25,6 @@ build:
     #     exclude: vendor
 
     - script:
-        name: go test
-        code: govendor test -v +local
-
-    - script:
         name: Install docker CLI (needed by integration tests)
         code: |
             # steps from https://docs.docker.com/install/linux/docker-ce/ubuntu/
@@ -38,7 +34,7 @@ build:
             add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable"
             apt-get update
             yes | apt-get install docker-ce  
-            ps -ef | greop docker
+            ps -ef | grep docker
             echo DOCKER_HOST=$DOCKER_HOST
             docker info
             export DOCKERHOST=
@@ -47,7 +43,11 @@ build:
 
     - script:
         name: Build wercker (needed by integration tests)
-        code: go build           
+        code: go build    
+
+    - script:
+        name: go test
+        code: govendor test -v +local               
 
     - script:
         name: Run integration tests
