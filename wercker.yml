@@ -2,6 +2,7 @@ box: golang:1.10
 no-response-timeout: 15
 
 build:
+  docker: true
   base-path: /go/src/github.com/wercker/wercker
   steps:
     - install-packages:
@@ -26,6 +27,31 @@ build:
     - script:
         name: go test
         code: govendor test -v +local
+
+    - script:
+        name: Install docker CLI (needed by integration tests)
+        code: |
+            # steps from https://docs.docker.com/install/linux/docker-ce/ubuntu/
+            apt-get update        
+            yes | apt-get install apt-transport-https ca-certificates curl software-properties-common
+            curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+            add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable"
+            apt-get update
+            yes | apt-get install docker-ce  
+            ps -ef | greop docker
+            echo DOCKER_HOST=$DOCKER_HOST
+            docker info
+            export DOCKERHOST=
+            echo DOCKER_HOST=$DOCKER_HOST
+            docker info
+
+    - script:
+        name: Build wercker (needed by integration tests)
+        code: go build           
+
+    - script:
+        name: Run integration tests
+        code: ./test-all.sh  
 
     - script:
         name: clear out the build binaries
