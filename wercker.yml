@@ -25,7 +25,7 @@ build:
     #     exclude: vendor
 
     - script:
-        name: Install docker CLI (needed by integration tests)
+        name: Install docker and start a daemon (needed by integration tests)
         code: |
             # steps from https://docs.docker.com/install/linux/docker-ce/ubuntu/
             echo AAA
@@ -47,7 +47,9 @@ build:
             export DOCKERHOST=
             echo DOCKER_HOST=$DOCKER_HOST
             docker info
-
+            # Start a docker daemon
+            export DOCKER_HOST=
+            systemctl enable docker
     - script:
         name: Build wercker (needed by integration tests)
         code: go build    
