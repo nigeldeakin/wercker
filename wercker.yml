@@ -43,9 +43,8 @@ build:
             # Start a docker daemon
             unset DOCKER_HOST
             systemctl enable docker
-            ps -ef
-            sleep 10
-            ps -ef
+            docker info
+            docker run hello-world
     - script:
         name: Build wercker (needed by integration tests)
         code: go build    
