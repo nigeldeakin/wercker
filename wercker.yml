@@ -41,8 +41,10 @@ build:
             echo DOCKER_HOST=$DOCKER_HOST
             docker info
             # Start a docker daemon
-            export DOCKER_HOST=
+            unset DOCKER_HOST
             systemctl enable docker
+            ps -ef
+            sleep 10
             ps -ef
     - script:
         name: Build wercker (needed by integration tests)
