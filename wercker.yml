@@ -40,7 +40,7 @@ build:
             apt-get update
             echo FFF
             yes | apt-get install docker-ce  
-            echo GGG
+            echo GGG 
             ps -ef | grep docker
             echo DOCKER_HOST=$DOCKER_HOST
             docker info
