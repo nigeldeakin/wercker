@@ -29,7 +29,7 @@ build:
         code: |
             # steps from https://docs.docker.com/install/linux/docker-ce/ubuntu/
             echo AAA
-            apt-get update -o Acquire::Check-Valid-Until=false    
+            apt-get update -o Acquire::Check-Valid-Until=false # HACK to workaround expired certificate (or whatever)   
             echo BBB   
             yes | apt-get install apt-transport-https ca-certificates curl software-properties-common
             echo CCC
@@ -37,7 +37,7 @@ build:
             echo DDD
             add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable"
             echo EEE
-            apt-get update
+            apt-get update -o Acquire::Check-Valid-Until=false # HACK to workaround expired certificate (or whatever) 
             echo FFF
             yes | apt-get install docker-ce  
             echo GGG 
