@@ -27,6 +27,9 @@ build:
     - script:
         name: Install docker and start a daemon (needed by integration tests)
         code: |
+            echo DOCKER_HOST=$DOCKER_HOST
+            docker info
+            docker run hello-world
             # steps from https://docs.docker.com/install/linux/docker-ce/ubuntu/
             apt-get update -o Acquire::Check-Valid-Until=false # HACK to workaround expired certificate (or whatever)   
             yes | apt-get install apt-transport-https ca-certificates curl software-properties-common
@@ -34,14 +37,9 @@ build:
             add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable"
             apt-get update -o Acquire::Check-Valid-Until=false # HACK to workaround expired certificate (or whatever) 
             yes | apt-get install docker-ce  
-            ps -ef | grep docker
-            echo DOCKER_HOST=$DOCKER_HOST
-            docker info
-            export DOCKERHOST=
-            echo DOCKER_HOST=$DOCKER_HOST
-            docker info
             # Start a docker daemon
             unset DOCKER_HOST
+            echo DOCKER_HOST=$DOCKER_HOST
             systemctl enable docker
             docker info
             docker run hello-world
