@@ -183,5 +183,6 @@ runTests() {
 }
 
 pullImages
-runTests
+status = runTests
 rm -rf "$workingDir"
+exit $status

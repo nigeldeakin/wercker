@@ -28,19 +28,12 @@ build:
         name: Install docker and start a daemon (needed by integration tests)
         code: |
             # steps from https://docs.docker.com/install/linux/docker-ce/ubuntu/
-            echo AAA
             apt-get update -o Acquire::Check-Valid-Until=false # HACK to workaround expired certificate (or whatever)   
-            echo BBB   
             yes | apt-get install apt-transport-https ca-certificates curl software-properties-common
-            echo CCC
             curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
-            echo DDD
             add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable"
-            echo EEE
             apt-get update -o Acquire::Check-Valid-Until=false # HACK to workaround expired certificate (or whatever) 
-            echo FFF
             yes | apt-get install docker-ce  
-            echo GGG 
             ps -ef | grep docker
             echo DOCKER_HOST=$DOCKER_HOST
             docker info
@@ -50,6 +43,7 @@ build:
             # Start a docker daemon
             export DOCKER_HOST=
             systemctl enable docker
+            ps -ef
     - script:
         name: Build wercker (needed by integration tests)
         code: go build    
