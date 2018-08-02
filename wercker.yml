@@ -32,7 +32,7 @@ build:
             apt-get update
             apt-cache madison docker-ce
             # install an old version to make it easy to differentiate it from the RDD
-            #apt-get install -y docker-ce=18.06.0~ce~3-0~debian
+            # apt-get install -y docker-ce=18.06.0~ce~3-0~debian
             apt-get install -y docker-ce=17.12.1~ce-0~debian
             docker version
     - script:
