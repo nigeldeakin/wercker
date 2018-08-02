@@ -485,11 +485,16 @@ func (b *DockerBox) Run(ctx context.Context, env *util.Environment, rddURI strin
 		portsToBind = b.config.Ports
 	}
 
+	// if we've specified direct docker access, run the container in privileged mode as it is safe to do so
+	// TODO perhaps make this configurable on the box
+	privileged := rddURI != ""
+
 	hostConfig := &docker.HostConfig{
 		Binds:        binds,
 		PortBindings: portBindings(portsToBind),
 		DNS:          b.dockerOptions.DNS,
 		NetworkMode:  dockerNetworkName,
+		Privileged:   privileged,
 	}
 
 	conf := &docker.Config{
