@@ -564,7 +564,6 @@ func (s *DockerPushStep) buildAutherOpts(ctx context.Context, env *util.Environm
 	}
 	if password, ok := s.data["password"]; ok {
 		opts.Password = env.Interpolate(password)
-		s.logger.Warnln("Password %s", opts.Password)
 	}
 	if registry, ok := s.data["registry"]; ok {
 		opts.Registry = dockerauth.NormalizeRegistry(env.Interpolate(registry))

@@ -161,7 +161,6 @@ func (e *Environment) passthru(prefix string) (env *Environment) {
 	a := [][]string{}
 	for _, key := range e.Order {
 		if strings.HasPrefix(key, prefix) {
-			fmt.Println(e.Map[key])
 			a = append(a, []string{strings.TrimPrefix(key, prefix), e.Map[key]})
 		}
 	}
