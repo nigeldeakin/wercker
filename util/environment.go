@@ -103,7 +103,15 @@ func (e *Environment) Get(key string) string {
 func (e *Environment) Export() []string {
 	s := []string{}
 	for _, key := range e.Order {
-		s = append(s, fmt.Sprintf(`export %s='%q'`, key, e.Map[key]))
+		s = append(s, fmt.Sprintf(`export %s=%q`, key, e.Map[key]))
+	}
+	return s
+}
+
+func (e *Environment) ExportHidden() []string {
+	s := []string{}
+	for _, key := range e.Order {
+		s = append(s, fmt.Sprintf(`export %s='%s'`, key, e.Map[key]))
 	}
 	return s
 }
@@ -153,6 +161,7 @@ func (e *Environment) passthru(prefix string) (env *Environment) {
 	a := [][]string{}
 	for _, key := range e.Order {
 		if strings.HasPrefix(key, prefix) {
+			fmt.Println(e.Map[key])
 			a = append(a, []string{strings.TrimPrefix(key, prefix), e.Map[key]})
 		}
 	}
