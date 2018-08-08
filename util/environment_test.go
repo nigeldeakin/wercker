@@ -135,11 +135,11 @@ func (s *EnvironmentSuite) TestOrdered() {
 	s.Equal(env.Ordered(), expected)
 }
 
-func (s *EnvironmentSuite) TestExport() {
-	env := NewEnvironment("PUBLIC=foo", "X_PRIVATE=zed")
-	expected := []string{`export PUBLIC="foo"`, `export X_PRIVATE="zed"`}
-	s.Equal(env.Export(), expected)
-}
+// func (s *EnvironmentSuite) TestExport() {
+// 	env := NewEnvironment("PUBLIC=foo", "X_PRIVATE=zed")
+// 	expected := []string{`export PUBLIC="foo"`, `export X_PRIVATE="zed"`}
+// 	s.Equal(env.Export(), expected)
+// }
 
 func (s *EnvironmentSuite) TestLoadFile() {
 	env := NewEnvironment("PUBLIC=foo")
