@@ -21,13 +21,20 @@ import (
 	"os/signal"
 	"path"
 	"strings"
+	"time"
 
 	dockersignal "github.com/docker/docker/pkg/signal"
 	"github.com/docker/docker/pkg/term"
 	"github.com/fsouza/go-dockerclient"
 	"github.com/google/shlex"
 	"github.com/pborman/uuid"
+	"github.com/pkg/errors"
 	"github.com/wercker/wercker/util"
+)
+
+var (
+	// DefaultTimeoutForCreateContainer - Default timeout for CreateContainer retries
+	DefaultTimeoutForCreateContainer = 10 * time.Second
 )
 
 // DockerClient is our wrapper for docker.Client
@@ -74,7 +81,7 @@ func NewDockerClient(options *Options) (*DockerClient, error) {
 func (c *DockerClient) RunAndAttach(name string) error {
 	hostConfig := &docker.HostConfig{}
 	cmd, _ := shlex.Split(DefaultDockerCommand)
-	container, err := c.CreateContainer(
+	container, err := c.CreateContainerWithRetries(
 		docker.CreateContainerOptions{
 			Name: uuid.NewRandom().String(),
 			Config: &docker.Config{
@@ -224,4 +231,28 @@ func (c *DockerClient) ExecOne(containerID string, cmd []string, output io.Write
 	}
 
 	return nil
+}
+
+// CreateContainerWithRetries create a container - retry on "no such image" error
+func (c *DockerClient) CreateContainerWithRetries(opts docker.CreateContainerOptions) (*docker.Container, error) {
+	timeout := time.After(DefaultTimeoutForCreateContainer)
+	tick := time.Tick(500 * time.Millisecond)
+	for {
+		select {
+		case <-timeout:
+			return nil, errors.New("Timed out trying to create container")
+		case <-tick:
+			container, err := c.CreateContainer(opts)
+			if err != nil {
+				switch err {
+				case docker.ErrNoSuchImage:
+					continue
+				default:
+					return nil, err
+				}
+			}
+			return container, nil
+
+		}
+	}
 }
