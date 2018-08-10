@@ -221,12 +221,25 @@ func (p *Runner) EnsureCode() (string, error) {
 
 		copyOpts := &shutil.CopyTreeOptions{Ignore: ignoreFunc, CopyFunction: shutil.Copy, Symlinks: true}
 		os.Rename(projectDir, fmt.Sprintf("%s-%s", projectDir, uuid.NewRandom().String()))
-		p.logger.Printf(p.formatter.Info(copyingMessage, projectDir))
 
-		err = shutil.CopyTree(p.options.ProjectPath, projectDir, copyOpts)
-		if err != nil {
-			return projectDir, err
+		if len(p.options.ProjectPathsByPipeline) == 0 {
+			p.logger.Printf(p.formatter.Info(copyingMessage, projectDir))
+			err = shutil.CopyTree(p.options.ProjectPath, projectDir, copyOpts)
+			if err != nil {
+				return projectDir, err
+			}
+		} else {
+			for pipelineName, pipelineOutputPath := range p.options.ProjectPathsByPipeline {
+				pipelineProjectDir := path.Join(projectDir, pipelineName)
+
+				p.logger.Printf(p.formatter.Info(copyingMessage, pipelineProjectDir))
+				err = shutil.CopyTree(pipelineOutputPath, pipelineProjectDir, copyOpts)
+				if err != nil {
+					return projectDir, err
+				}
+			}
 		}
+
 	}
 	return projectDir, nil
 }
@@ -525,6 +538,14 @@ func (p *Runner) SetupEnvironment(runnerCtx context.Context) (*RunnerShared, err
 	}
 	shared.config = rawConfig
 	sr.WerckerYamlContents = stringConfig
+
+	// Check that the requested pipeline is defined in the yaml file.
+	if _, ok := rawConfig.PipelinesMap[p.options.Pipeline]; !ok {
+		err := fmt.Errorf("No pipeline named %s", p.options.Pipeline)
+		sr.Message = err.Error()
+		return shared, err
+
+	}
 
 	// If the pipeline has requested direct docker daemon access then rddURI will be set to the daemon URI that we will give the pipeline access to
 	rddURI := ""
