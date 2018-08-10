@@ -1,5 +1,7 @@
 ## unreleased
 
+- Retry CreateContainer to avoid intermittent no such image issue (#479)
+
 ## v1.0.1316 (2018-08-09)
 
 - Experimental support for running workflows in yml locally (#471)
