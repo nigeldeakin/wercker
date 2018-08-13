@@ -401,8 +401,8 @@ type DockerPushStep struct {
 	authenticator auth.Authenticator
 	// imageName contains the value specified in image-name option of the step.
 	// This image-name MUST be same as image-name option specified in one of the previous internal/docker-build steps.
-	// if set, the name of the existing image built by a previous internal/docker-build step is computed by prepending the build ID to the specified image-name property
-	// if imageName is set then the existing pre-built image is tagged and pushed
+	// if set, the name of the existing image built by a previous internal/docker-build step is computed by prepending the build ID to the specified image-name property.
+	// if imageName is set then the existing pre-built image is tagged and pushed.
 	// if imageName is not set then the pipeline container is committed, tagged and pushed (classic behaviour)
 	imageName string
 }
@@ -811,7 +811,7 @@ func (s *DockerPushStep) Execute(ctx context.Context, sess *core.Session) (int, 
 	} else {
 		// if imageName is specified then compute image name by prepedning the runID to value of imageName
 		imageRef = s.options.RunID + s.imageName
-		msg := fmt.Sprintf("Pushing image built using internal/docker-build step, image name: %s", s.imageName)
+		msg := fmt.Sprintf("Pushing image built using internal/docker-build step, image name: %s\n", s.imageName)
 		s.logger.Debug(msg)
 		emit(e, msg)
 	}
