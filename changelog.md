@@ -1,5 +1,7 @@
 ## unreleased
 
+- Display message to users while pushing images built using internal/docker-build (#481)
+
 ## v1.0.1316 (2018-08-09)
 
 - Experimental support for running workflows in yml locally (#471)
