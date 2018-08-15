@@ -95,7 +95,7 @@ type Runner struct {
 func NewRunner(ctx context.Context, options *core.PipelineOptions, dockerOptions *dockerlocal.Options, getPipeline pipelineGetter) (*Runner, error) {
 	e, err := core.EmitterFromContext(ctx)
 	if err != nil {
-		return nil, errors.Wrap(err, "Could not create emmiter from context")
+		return nil, errors.Wrap(err, "could not create emmiter from context")
 	}
 	logger := util.RootLogger().WithField("Logger", "Runner")
 	// h, err := NewLogHandler()
@@ -162,12 +162,12 @@ func (p *Runner) EnsureCode() (string, error) {
 	if p.options.ProjectURL != "" {
 		resp, err := util.Get(p.options.ProjectURL, "")
 		if err != nil {
-			return projectDir, errors.Wrapf(err, "Could not read tarball %s", p.options.ProjectURL)
+			return projectDir, errors.Wrapf(err, "could not read tarball %s", p.options.ProjectURL)
 		}
 		p.logger.Printf(p.formatter.Info(copyingMessage, projectDir))
 		err = util.Untargzip(projectDir, resp.Body)
 		if err != nil {
-			return projectDir, errors.Wrapf(err, "Could not Untargzip into %s", projectDir)
+			return projectDir, errors.Wrapf(err, "could not Untargzip into %s", projectDir)
 		}
 	} else {
 
@@ -293,20 +293,20 @@ func (p *Runner) GetConfig() (*core.Config, string, error) {
 	if p.options.WerckerYml != "" {
 		werckerYaml, err = ioutil.ReadFile(p.options.WerckerYml)
 		if err != nil {
-			return nil, "", errors.Wrapf(err, "Could not read file %s while getting configuration",
+			return nil, "", errors.Wrapf(err, "could not read file %s while getting configuration",
 				p.options.WerckerYml)
 		}
 	} else {
 		werckerYaml, err = core.ReadWerckerYaml([]string{p.ProjectDir()}, false)
 		if err != nil {
-			return nil, "", errors.Wrap(err, "Could not read wercker yml while getting config")
+			return nil, "", errors.Wrap(err, "could not read wercker yml while getting config")
 		}
 	}
 
 	// Parse that bad boy.
 	rawConfig, err := core.ConfigFromYaml(werckerYaml)
 	if err != nil {
-		return nil, "", errors.Wrapf(err, "Could not get configuration from yaml %s", werckerYaml)
+		return nil, "", errors.Wrapf(err, "could not get configuration from yaml %s", werckerYaml)
 	}
 
 	// Add some options to the global config
@@ -408,15 +408,15 @@ func (p *Runner) CopySource() error {
 func (p *Runner) GetSession(runnerContext context.Context, containerID string) (context.Context, *core.Session, error) {
 	dockerTransport, err := dockerlocal.NewDockerTransport(p.options, p.dockerOptions, containerID)
 	if err != nil {
-		return nil, nil, errors.Wrapf(err, "Could not create docker transport for %s", containerID)
+		return nil, nil, errors.Wrapf(err, "could not create docker transport for %s", containerID)
 	}
 	sess := core.NewSession(p.options, dockerTransport)
 	if err != nil {
-		return nil, nil, errors.Wrapf(err, "Could not create session for %s", containerID)
+		return nil, nil, errors.Wrapf(err, "could not create session for %s", containerID)
 	}
 	sessionCtx, err := sess.Attach(runnerContext)
 	if err != nil {
-		return nil, nil, errors.Wrapf(err, "Could not attach to session for %s", containerID)
+		return nil, nil, errors.Wrapf(err, "could not attach to session for %s", containerID)
 	}
 
 	return sessionCtx, sess, nil
@@ -539,7 +539,7 @@ func (p *Runner) SetupEnvironment(runnerCtx context.Context) (*RunnerShared, err
 	}
 	if err != nil {
 		sr.Message = err.Error()
-		return shared, errors.Wrap(err, "Runner error during setup of environment")
+		return shared, errors.Wrap(err, "runner error during setup of environment")
 	}
 	shared.config = rawConfig
 	sr.WerckerYamlContents = stringConfig
@@ -614,7 +614,7 @@ func (p *Runner) SetupEnvironment(runnerCtx context.Context) (*RunnerShared, err
 	// Do some sanity checks before starting
 	err = dockerlocal.RequireDockerEndpoint(runnerCtx, p.dockerOptions)
 	if err != nil {
-		return nil, errors.Wrapf(err, "Error when requiring docker endpoint for %s",
+		return nil, errors.Wrapf(err, "error when requiring docker endpoint for %s",
 			p.options.RunID)
 	}
 
