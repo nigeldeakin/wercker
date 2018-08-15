@@ -1,5 +1,7 @@
 ## unreleased
 
+- Wrap errors in runner
+
 ## v1.0.1321 (2018-08-14)
 
 - Add OCI object store support (#465)
