@@ -1,6 +1,6 @@
 ## unreleased
 
-- Wrap errors in runner
+- Wrap errors in runner (#487)
 
 ## v1.0.1321 (2018-08-14)
 
