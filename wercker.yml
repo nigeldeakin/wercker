@@ -91,6 +91,12 @@ build:
         name: prepare
         code: cp -r scripts $WERCKER_OUTPUT_DIR
 
+    - script:
+        name: Copy source code for use by integration-test pipeline
+        code: |
+            cp -r /go $WERCKER_OUTPUT_DIR
+            ls $WERCKER_OUTPUT_DIR        
+
 integration-tests:
   box: alpine:3.7
   docker: true
