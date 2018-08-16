@@ -131,6 +131,7 @@ integration-tests:
             # since this would override the RunID used by pipelines started by these tests
             export WERCKER_DEPLOY_ID=
 
+
             cd $GOPATH/src/github.com/wercker/wercker
             sh ./test-all.sh
         
