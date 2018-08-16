@@ -96,8 +96,8 @@ testScratchPush () {
 
 
 runTests() {
-  source $testsDir/rdd/test.sh || return 1
-  source $testsDir/rdd-volumes/test.sh || return 1
+  #source $testsDir/rdd/test.sh || return 1
+  #source $testsDir/rdd-volumes/test.sh || return 1
   source $testsDir/enable-volumes/test.sh || return 1
   source $testsDir/direct-mount-test/test.sh || return 1
   source $testsDir/docker-push/test.sh || return 1
@@ -108,7 +108,12 @@ runTests() {
 
   export X_TEST_SERVICE_VOL_PATH=$testsDir/test-service-vol
   basicTest "docker run" build "$testsDir/docker-run" --docker-local || return 1
+
   basicTest "source-path"       build "$testsDir/source-path" --docker-local || return 1
+  # The source-path test messes up subsequent tests, so clean out its working directory
+  rm -rf "${workingDir}"
+  mkdir -p "$workingDir"
+
   basicTest "rm pipeline --artifacts" build "$testsDir/rm-pipeline" --docker-local --artifacts  || return 1
   basicTest "rm pipeline"       build "$testsDir/rm-pipeline" --docker-local || return 1
   basicTest "local services"    build "$testsDir/local-service/service-consumer" --docker-local || return 1
