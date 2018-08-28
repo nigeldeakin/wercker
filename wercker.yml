@@ -98,7 +98,7 @@ build:
             ls $WERCKER_OUTPUT_DIR   
 
 integration-tests:
-  box: ubuntu
+  box: alpine:3.7
   docker: true
   steps:
     - script:
