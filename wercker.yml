@@ -112,7 +112,7 @@ integration-tests:
     - script:
         name: Start the docker daemon
         code: |
-            dockerd --host=tcp://0.0.0.0:2375 &
+            dockerd --host=tcp://0.0.0.0:2375 --storage-driver=overlay &
             echo Main daemon
             echo DOCKER_HOST=$DOCKER_HOST
             docker version
