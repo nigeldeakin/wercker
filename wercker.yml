@@ -143,7 +143,7 @@ integration-tests:
         code: |
             touch $WERCKER_OUTPUT_DIR/dummy                      
 
-integration-tests-old:
+integration-tests-2:
   box: alpine:3.7
   docker: true
   steps:
