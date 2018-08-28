@@ -188,5 +188,5 @@ runTests() {
 }
 
 pullImages
-runTests
+runTests || exit 1
 rm -rf "$workingDir"
