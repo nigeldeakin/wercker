@@ -128,6 +128,7 @@ integration-tests:
         name: Play around
         code: |
             pwd
+            DOCKER_HOST=$DOCKER_HOST
             docker version
             docker ps -a
             docker run hello-world 
