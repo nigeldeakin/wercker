@@ -118,7 +118,7 @@ integration-tests:
     - script:
         name: Start docker daemon
         code: |
-            docker run -it --privileged --name dockerd -p 2375:2375 -d docker:dind 
+            docker run -it --privileged --name dockerd --network host -p 2375:2300 -d docker:dind 
             sleep 1
             docker logs dockerd
             echo Containers in the normal daemon
@@ -126,7 +126,7 @@ integration-tests:
             echo Containers in the new daemon
             daemonIP=`docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' dockerd`
             echo daemonIP=$daemonIP
-            export DOCKER_HOST="tcp://127.0.0.1:2375"
+            export DOCKER_HOST="tcp://127.0.0.1:2300"
             docker ps -a
     - script:
         name: Play around
