@@ -127,7 +127,7 @@ integration-tests:
             echo Containers in the new daemon
             #daemonIP=`docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' dockerd`
             #echo daemonIP=$daemonIP
-            export DOCKER_HOST="tcp://dockerd:2300"
+            export DOCKER_HOST="tcp://dockerd:2375"
             docker ps -a
     - script:
         name: Play around
