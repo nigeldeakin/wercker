@@ -116,7 +116,7 @@ runTests() {
 
   basicTest "rm pipeline --artifacts" build "$testsDir/rm-pipeline" --docker-local --artifacts  || return 1
   basicTest "rm pipeline"       build "$testsDir/rm-pipeline" --docker-local || return 1
-  basicTest "local services"    build "$testsDir/local-service/service-consumer" --docker-local || return 1
+  ###basicTest "local services"    build "$testsDir/local-service/service-consumer" --docker-local || return 1
   basicTest "deploy"            deploy "$testsDir/deploy-no-targets" --docker-local || return 1
   basicTest "deploy target"     deploy "$testsDir/deploy-targets" --docker-local  --deploy-target test || return 1
   basicTest "after steps"       build "$testsDir/after-steps-fail" --docker-local --pipeline build_true  || return 1
