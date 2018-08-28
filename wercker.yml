@@ -117,11 +117,13 @@ integration-tests:
             echo DOCKER_HOST=$DOCKER_HOST
             docker version
             docker ps
+            docker info
             echo New daemon
             export DOCKER_HOST=tcp://127.0.0.1:2375
             echo DOCKER_HOST=$DOCKER_HOST
             docker version
-            docker ps       
+            docker ps    
+            docker info   
     - script:
         name: install curl (needed by integration tests)
         code: apk add curl
