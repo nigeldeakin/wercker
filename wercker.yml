@@ -118,7 +118,7 @@ integration-tests:
     - script:
         name: Start docker daemon
         code: |
-            docker run -it --privileged --name dockerd -p 127.0.0.1:2375:2375 -d docker:dind 
+            docker run -it --privileged --name dockerd -p 2375:2375 -d docker:dind 
             sleep 1
             docker logs dockerd
             echo Containers in the normal daemon
