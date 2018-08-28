@@ -1,5 +1,24 @@
 ## unreleased
 
+## v1.0.1335 (2018-08-28)
+
+- Increase value of retry counter for CreateContainer call (#495)
+
+## v1.0.1334 (2018-08-27)
+
+- Add support for runners to use OCI object storage (#492)
+- Fix runner configure access to OCIR caused by OCI API change. Show runner docker image status on runner start (#493)
+
+## v1.0.1328 (2018-08-21)
+
+- Retry CreateContainer to avoid intermittent no such image issue (#479)
+
+## v1.0.1327 (2018-08-20)
+
+- Display message to users while pushing images built using internal/docker-build (#481)
+
+## v1.0.1323 (2018-08-16)
+
 - Wrap errors in runner (#487)
 
 ## v1.0.1321 (2018-08-14)
