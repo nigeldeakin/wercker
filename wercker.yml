@@ -118,7 +118,7 @@ integration-tests:
     - script:
         name: Start docker daemon
         code: |
-            # Can't use unix:///var/run/docker.sock as this will already be in use  (when run locally anyway)
+            #  Can't use unix:///var/run/docker.sock as this will already be in use  (when run locally anyway)
             docker run -it --privileged --name dockerd --network=$DOCKER_NETWORK_NAME -d docker:dind 
             export DOCKER_HOST="tcp://dockerd:2375"
             sleep 1
@@ -145,7 +145,7 @@ integration-tests:
         code: |
             touch $WERCKER_OUTPUT_DIR/dummy                      
 
-integration-tests:
+integration-tests-old:
   box: alpine:3.7
   docker: true
   steps:
