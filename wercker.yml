@@ -120,6 +120,7 @@ integration-tests:
         code: |
             docker run -it --privileged --name dockerd -p 2375 -d docker:dind 
             sleep 1
+            docker logs dockerd
             echo Containers in the normal daemon
             docker ps
             ip -4 addr show
