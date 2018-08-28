@@ -122,9 +122,11 @@ integration-tests:
             sleep 1
             echo Containers in the normal daemon
             docker ps
+            ip -4 addr show
             echo Containers in the new daemon
             export DOCKER_HOST="tcp://dockerd:2375"
             docker ps -a
+            ip -4 addr show
     - script:
         name: Play around
         code: |
