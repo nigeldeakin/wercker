@@ -118,12 +118,13 @@ integration-tests:
     - script:
         name: Start docker daemon
         code: |
-            docker run -it --privileged --name dockerd --network=$DOCKER_NETWORK_NAME -d docker:dind 
-            export DOCKER_HOST="tcp://dockerd:2375"
+            docker run -it --privileged --name dockerd -d docker:dind 
             sleep 1
-            docker version          
+            echo Containers in the normal daemon
+            docker ps
+            echo Containers in the new daemon
+            export DOCKER_HOST="tcp://dockerd:2375"
             docker ps -a
-
     - script:
         name: Play around
         code: |
@@ -131,7 +132,6 @@ integration-tests:
             DOCKER_HOST=$DOCKER_HOST
             docker version
             docker ps -a
-            docker run hello-world 
     - script:
         name: install curl (needed by integration tests)
         code: apk add curl
