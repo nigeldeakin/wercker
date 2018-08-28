@@ -98,8 +98,8 @@ testScratchPush () {
 runTests() {
   #source $testsDir/rdd/test.sh || return 1
   #source $testsDir/rdd-volumes/test.sh || return 1
-  source $testsDir/enable-volumes/test.sh || return 1
-  source $testsDir/direct-mount-test/test.sh || return 1
+  ##source $testsDir/enable-volumes/test.sh || return 1
+  ##source $testsDir/direct-mount-test/test.sh || return 1
   source $testsDir/docker-push/test.sh || return 1
   source $testsDir/docker-build/test.sh || return 1
   source $testsDir/docker-push-image/test.sh || return 1

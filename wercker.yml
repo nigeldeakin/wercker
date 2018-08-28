@@ -118,7 +118,6 @@ integration-tests:
     - script:
         name: Start docker daemon
         code: |
-            # host networking not supported on docker for mac
             docker run -it --privileged --name dockerd --network=$DOCKER_NETWORK_NAME -p 2375:2375 -d docker:dind 
             sleep 1
             docker logs dockerd
