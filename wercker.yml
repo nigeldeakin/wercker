@@ -1,5 +1,6 @@
 box: golang:1.10
 command-timeout: 60
+no-response-timeout: 10
 
 workflows:
   - name: build-and-test
@@ -98,7 +99,7 @@ build:
             ls $WERCKER_OUTPUT_DIR   
 
 integration-tests:
-  box: alpine:3.7
+  box: docker:dind
   docker: true
   steps:
     - script:
@@ -109,32 +110,18 @@ integration-tests:
             $GOPATH/src/github.com/wercker/wercker/wercker --version            
 
     - script:
-        name: Install docker
+        name: Start the docker daemon
         code: |
-            apk add docker 
-            docker version
-            docker ps       
-
-    - script:
-        name: Start docker daemon
-        code: |
-            docker run -it --privileged --name dockerd --network=$DOCKER_NETWORK_NAME -p 2375:2375 -d docker:dind 
-            sleep 1
-            docker logs dockerd
-            echo Containers in the normal daemon
-            docker ps
-            echo Containers in the new daemon
-            #daemonIP=`docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' dockerd`
-            #echo daemonIP=$daemonIP
-            export DOCKER_HOST="tcp://dockerd:2375"
-            docker ps -a
-    - script:
-        name: Play around
-        code: |
-            pwd
+            dockerd --host=tcp://0.0.0.0:2375 &
+            echo Main daemon
             echo DOCKER_HOST=$DOCKER_HOST
             docker version
-            docker ps -a
+            docker ps
+            echo New daemon
+            export DOCKER_HOST=127.0.0.1:2375
+            echo DOCKER_HOST=$DOCKER_HOST
+            docker version
+            docker ps       
     - script:
         name: install curl (needed by integration tests)
         code: apk add curl
