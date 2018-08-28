@@ -118,15 +118,16 @@ integration-tests:
     - script:
         name: Start docker daemon
         code: |
-            docker run -it --privileged --name dockerd --network host -p 2375:2300 -d docker:dind 
+            # host networking not supported on docker for mac
+            docker run -it --privileged --name dockerd --network=$DOCKER_NETWORK_NAME -p 2375:2375 -d docker:dind 
             sleep 1
             docker logs dockerd
             echo Containers in the normal daemon
             docker ps
             echo Containers in the new daemon
-            daemonIP=`docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' dockerd`
-            echo daemonIP=$daemonIP
-            export DOCKER_HOST="tcp://127.0.0.1:2300"
+            #daemonIP=`docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' dockerd`
+            #echo daemonIP=$daemonIP
+            export DOCKER_HOST="tcp://dockerd:2300"
             docker ps -a
     - script:
         name: Play around
