@@ -100,7 +100,7 @@ build:
 
 integration-tests:
   box: docker:dind
-  docker: true
+  #docker: true
   steps:
     - script:
         name: Copy and test the wercker executable
