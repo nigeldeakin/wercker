@@ -154,9 +154,10 @@ runTests() {
   basicTest "cache size too big" build "$testsDir/cache-size" --docker-local || return 1
 
   # make sure the build fails when an artifact is too big
-  ###basicTestFail "artifact size too big" build "$testsDir/artifact-size" --docker-local --artifacts || return 1
-  ###grep -q "Storing artifacts failed: Size exceeds maximum size of 5000MB" "${workingDir}/artifact size too big.log" || return 1
-
+  basicTestFail "artifact size too big" build "$testsDir/artifact-size" --docker-local --artifacts || return 1
+  echo Checking log
+  grep -q "Storing artifacts failed: Size exceeds maximum size of 5000MB" "${workingDir}/artifact size too big.log" || return 1
+  echo Finished checking log
   basicTest "artifact empty file" build "$testsDir/artifact-empty-file" --docker-local --artifacts || return 1
 
   # test deploy behavior with different levels of specificity
