@@ -113,12 +113,12 @@ integration-tests:
         name: Start the docker daemon
         code: |
             dockerd --host=tcp://0.0.0.0:2375 --storage-driver=overlay &
-            echo Main daemon
+            echo Information about the main daemon
             echo DOCKER_HOST=$DOCKER_HOST
             docker version
             docker ps
             docker info
-            echo New daemon
+            echo Information about the new daemon
             export DOCKER_HOST=tcp://127.0.0.1:2375
             echo DOCKER_HOST=$DOCKER_HOST
             docker version
