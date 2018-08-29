@@ -148,7 +148,7 @@ runTests() {
   testScratchPush || return 1
 
   # test runs locally but not in wercker build container
-  #basicTest "shellstep" build --docker-local --enable-dev-steps "$testsDir/shellstep" || return 1
+  basicTest "shellstep" build --docker-local --enable-dev-steps "$testsDir/shellstep" || return 1
 
   # make sure the build successfully completes when cache is too big
   basicTest "cache size too big" build "$testsDir/cache-size" --docker-local || return 1
