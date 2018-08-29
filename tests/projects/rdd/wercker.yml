@@ -15,7 +15,7 @@ build:
           echo =======
           docker network inspect -f '{{range .IPAM.Config}}{{.Gateway}}{{end}}' $DOCKER_NETWORK_NAME
           export hostip=`docker network inspect -f '{{range .IPAM.Config}}{{.Gateway}}{{end}}' $DOCKER_NETWORK_NAME`
-          #ip route
+          # ip route
           #export hostip=`ip route | awk '/^default/ { print $3 }'`
           #export hostip=`ip route | awk '/dev/ { print $7 }'`
           export DOCKER_HOST=${hostip}:2375
