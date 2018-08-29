@@ -97,11 +97,9 @@ testScratchPush () {
 
 runTests() {
 
-  basicTestFail "artifact size too big" build "$testsDir/artifact-size" --docker-local --artifacts || return 1
-  echo testing output
-  grep -q "Storing artifacts failed: Size exceeds maximum size of 5000MB" "${workingDir}/artifact size too big.log" || return 1
-  echo tested output 
-  
+  # make sure the build successfully completes when cache is too big
+  basicTest "cache size too big" build "$testsDir/cache-size" --docker-local || return 1
+
   #source $testsDir/rdd/test.sh || return 1
   #source $testsDir/rdd-volumes/test.sh || return 1
   source $testsDir/enable-volumes/test.sh || return 1
@@ -155,20 +153,20 @@ runTests() {
 
   source $testsDir/shellstep || return 1
 
-  # Some prior test messes up subsequent tests, so clean out its working directory
+  # The following test fails if we don't first clean out the working directory
   rm -rf "${workingDir}"
   mkdir -p "$workingDir"
 
   # make sure the build successfully completes when cache is too big
   basicTest "cache size too big" build "$testsDir/cache-size" --docker-local || return 1
 
-  # Some prior test messes up subsequent tests, so clean out its working directory
-  #rm -rf "${workingDir}"
-  #mkdir -p "$workingDir"
+  # The following test fails if we don't first clean out the working directory
+  rm -rf "${workingDir}"
+  mkdir -p "$workingDir"
 
   # make sure the build fails when an artifact is too big
-  ### basicTestFail "artifact size too big" build "$testsDir/artifact-size" --docker-local --artifacts || return 1
-  ### grep -q "Storing artifacts failed: Size exceeds maximum size of 5000MB" "${workingDir}/artifact size too big.log" || return 1
+  basicTestFail "artifact size too big" build "$testsDir/artifact-size" --docker-local --artifacts || return 1
+  grep -q "Storing artifacts failed: Size exceeds maximum size of 5000MB" "${workingDir}/artifact size too big.log" || return 1
   basicTest "artifact empty file" build "$testsDir/artifact-empty-file" --docker-local --artifacts || return 1
 
   # test deploy behavior with different levels of specificity
