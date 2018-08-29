@@ -96,6 +96,12 @@ testScratchPush () {
 
 
 runTests() {
+
+  basicTestFail "artifact size too big" build "$testsDir/artifact-size" --docker-local --artifacts || return 1
+  echo testing output
+  grep -q "Storing artifacts failed: Size exceeds maximum size of 5000MB" "${workingDir}/artifact size too big.log" || return 1
+  echo tested output 
+  
   #source $testsDir/rdd/test.sh || return 1
   #source $testsDir/rdd-volumes/test.sh || return 1
   source $testsDir/enable-volumes/test.sh || return 1
