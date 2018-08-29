@@ -11,6 +11,8 @@ build:
     - script:
         name: Explore the docker daemon 
         code: |
+          echo ip route
+          ip route
           echo DOCKER_NETWORK_NAME=$DOCKER_NETWORK_NAME
           echo DOCKER_HOST=$DOCKER_HOST
           echo TAG=$TAG

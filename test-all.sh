@@ -97,10 +97,7 @@ testScratchPush () {
 
 runTests() {
 
-  basicTest "local services"    build "$testsDir/local-service/service-consumer" --docker-local || return 1
-
-
-  #source $testsDir/rdd/test.sh || return 1
+  source $testsDir/rdd/test.sh || return 1
   #source $testsDir/rdd-volumes/test.sh || return 1
   source $testsDir/enable-volumes/test.sh || return 1
   source $testsDir/direct-mount-test/test.sh || return 1
