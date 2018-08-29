@@ -148,7 +148,7 @@ runTests() {
   testScratchPush || return 1
 
   # the shellstep test passes locally but fails (with inappropriate ioctl) when run in wercker
-  if [ -z ${WERCKER_ROOT} ]; then 
+  if [ -n ${WERCKER_ROOT} ]; then 
     # Running in wercker, shellstep test would not work so don't set --enable-dev-steps which will cause the step to be skipped
     enable-dev-steps=
   else 
