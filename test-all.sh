@@ -150,7 +150,16 @@ runTests() {
   source $testsDir/shellstep || return 1
 
   # make sure the build successfully completes when cache is too big
+
+  # Some prior test messes up subsequent tests, so clean out its working directory
+  rm -rf "${workingDir}"
+  mkdir -p "$workingDir"
+
   basicTest "cache size too big" build "$testsDir/cache-size" --docker-local || return 1
+
+  # The source-path test messes up subsequent tests, so clean out its working directory
+  rm -rf "${workingDir}"
+  mkdir -p "$workingDir"
 
   # make sure the build fails when an artifact is too big
   ### basicTestFail "artifact size too big" build "$testsDir/artifact-size" --docker-local --artifacts || return 1
