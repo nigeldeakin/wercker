@@ -9,11 +9,9 @@ build:
         cmd: /bin/sh
     steps:
         - script:
-            name: call the API server and check the result
             code: |
                 wget -q echotest:8000
                 res=$(cat index.html)
-                echo Received the reply: $res
                 if [ "$res" != "hello from another service" ]; then
                     echo "test failed for local service"
                     exit 1
