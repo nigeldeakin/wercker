@@ -2,14 +2,6 @@ box: golang:1.10
 command-timeout: 30
 no-response-timeout: 15
 
-workflows:
-  - name: build-and-test
-    pipelines:
-      - name: build
-      - name: integration-tests
-        requires:
-          - build
-
 build:
   base-path: /go/src/github.com/wercker/wercker
   steps:
@@ -93,7 +85,7 @@ build:
         code: cp -r scripts $WERCKER_OUTPUT_DIR
 
     - script:
-        name: Copy source code for use by integration-test pipeline
+        name: Copy source code for use by integration-tests pipeline
         code: |
             cp -r /go $WERCKER_OUTPUT_DIR
             ls $WERCKER_OUTPUT_DIR   
