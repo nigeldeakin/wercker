@@ -8,7 +8,20 @@
 # that is not already in the docker daemon these tests will fail with "image not found"
 # The function pullImages below pulls a list of specified images before running the tests. Update it if needed.
 #
-# To run the tests
+# This script can be run either from the command line or in a Wercker pipeline.
+# Thise tests that cannot be run in a Wercker pipeline are skipped automatically.
+#
+# Before running these tests in a Wercker pipeline the pipeline must start a docker daemon running in the pipeline container, 
+# and set DOCKER_HOST accordingly. This means the pipeline must have docker: true specified because that causes the pipeline 
+# container to run in privileged mode, and a docker container is not allowed to start a docker daemon unless the container 
+# is started in privileged mode.
+#
+# Note that you can't simply set docker:true (to enable direct docker access) and use the default setting for DOCKER_HOST,
+# which is to point to the daemon in which the pipeline container is running. This is because these tests use the Wercker CLI,
+# which will start containers in the daemon specified by DOCKER_HOST, and Wercker CLI requires that any such containers 
+# are able access the same file system that the Wercker CLI uses.
+# 
+# To run the tests:
 #
 #  cd $GOPATH//src/github.com/wercker/wercker
 #  ./test-all.sh
@@ -97,12 +110,16 @@ testScratchPush () {
 
 runTests() {
 
+  basicTest "local services"    build "$testsDir/local-service/service-consumer" --docker-local || return 1
+
   source $testsDir/privileged/test.sh || return 1
 
-  # The following tests cannot currently be run in a wercker pipeline
+  # The following tests must be skipped when run in a wercker pipeline 
   if [ -z ${WERCKER_ROOT} ]; then 
+    # The rdd tests cannot be run in wercker because the pipeline cannot connect to the daemon
     source $testsDir/rdd/test.sh || return 1
     source $testsDir/rdd-volumes/test.sh || return 1
+    # 
     basicTest "local services"    build "$testsDir/local-service/service-consumer" --docker-local || return 1
     # The shellstep test cannot be run in wercker as the lack of a terminal causes it to fail with "invalid ioctl"
     basicTest "shellstep" build --docker-local --enable-dev-steps "$testsDir/shellstep" || return 1
