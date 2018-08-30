@@ -1,5 +1,14 @@
 ## unreleased
 
+## v1.0.1337 (2018-08-30)
+
+- Display on screen repository:tag being pushed with internal/docker-push (#500)
+- When docker:true is set, run the pipeline container in privileged mode (#480)
+
+## v1.0.1336 (2018-08-29)
+
+- Workflow validation (#497)
+
 ## v1.0.1335 (2018-08-28)
 
 - Increase value of retry counter for CreateContainer call (#495)
