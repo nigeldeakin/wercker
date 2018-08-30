@@ -97,8 +97,14 @@ testScratchPush () {
 
 runTests() {
 
-  source $testsDir/rdd/test.sh || return 1
-  #source $testsDir/rdd-volumes/test.sh || return 1
+  # The following tests cannot currently be run in a wercker pipeline
+  if [ -z ${WERCKER_ROOT} ]; then 
+    source $testsDir/privileged/test.sh || return 1
+    source $testsDir/rdd/test.sh || return 1
+    source $testsDir/rdd-volumes/test.sh || return 1
+    basicTest "shellstep" build --docker-local --enable-dev-steps "$testsDir/shellstep" || return 1
+  fi
+
   source $testsDir/enable-volumes/test.sh || return 1
   source $testsDir/direct-mount-test/test.sh || return 1
   source $testsDir/docker-push/test.sh || return 1
@@ -148,9 +154,7 @@ runTests() {
 
   testScratchPush || return 1
 
-  source $testsDir/shellstep || return 1
-
-  # The following test fails if we don't first clean out the working directory
+    # The following test fails if we don't first clean out the working directory
   rm -rf "${workingDir}"
   mkdir -p "$workingDir"
 

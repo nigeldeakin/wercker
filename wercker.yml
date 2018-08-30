@@ -143,55 +143,6 @@ integration-tests:
         code: |
             touch $WERCKER_OUTPUT_DIR/dummy                      
 
-integration-tests-2:
-  box: alpine:3.7
-  docker: true
-  steps:
-    - script:
-        name: Copy and test the wercker executable
-        code: |
-            export GOPATH=$WERCKER_SOURCE_DIR/go
-            cp -p $WERCKER_SOURCE_DIR/artifacts/latest/linux_amd64/sentcli $GOPATH/src/github.com/wercker/wercker/wercker
-            $GOPATH/src/github.com/wercker/wercker/wercker --version            
-
-    - script:
-        name: Install docker
-        code: |
-            apk add docker 
-            docker version
-            docker ps       
-
-    - script:
-        name: Start docker daemon
-        code: |
-            # Can't use unix:///var/run/docker.sock as this will already be in use  (when run locally anyway)
-            df
-            dockerd -H tcp://0.0.0.0:2375 &
-            export DOCKER_HOST="tcp://127.0.0.1:2375"
-            sleep 1
-            docker version          
-            docker ps   
-
-    - script:
-        name: install curl
-        code: apk add curl
-
-    - script:
-        name: Integration tests
-        code: |
-            # Unset WERCKER_DEPLOY_ID (which is set when these tests are run in wercker)
-            # since this would override the RunID used by pipelines started by these tests
-            export WERCKER_DEPLOY_ID=
-
-
-            cd $GOPATH/src/github.com/wercker/wercker
-            sh ./test-all.sh
-        
-    - script:
-        name: Create dummy file in WERCKER_OUTPUT_DIR to prevent it storing the source directory at the end of the pipeline
-        code: |
-            touch $WERCKER_OUTPUT_DIR/dummy         
-
 deploy:
   box: ubuntu
   steps:
