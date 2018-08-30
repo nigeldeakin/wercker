@@ -110,22 +110,12 @@ testScratchPush () {
 
 runTests() {
 
-basicTest "local services"    build "$testsDir/local-service/service-consumer" --docker-local --no-remove 
-docker ps -a 
-containerID=`docker ps -a | grep wercker-service | awk '{print $1}'`
-network=`docker inspect $containerID | grep NetworkID | awk '{print $2}' | sed "s/\"//g" | sed "s/,//g"`
-echo service used container $containerID and network $network
-
-containerID=`docker ps -a | grep wercker-pipeline | awk '{print $1}'`
-network=`docker inspect $containerID | grep NetworkID | awk '{print $2}' | sed "s/\"//g" | sed "s/,//g"`
-echo pipeline used container $containerID and network $network
-
   #  The following tests must be skipped when run in a wercker pipeline 
   if [ -z ${WERCKER_ROOT} ]; then 
     # The rdd tests cannot be run in wercker because the pipeline cannot connect to the daemon
     source $testsDir/rdd/test.sh || return 1
     source $testsDir/rdd-volumes/test.sh || return 1
-    # local services test cannot be run in wercker
+    # local services test cannot be run in wercker because the pipeline cannot connect to the local service (despite being in the same network)
     basicTest "local services"    build "$testsDir/local-service/service-consumer" --docker-local || return 1
     # The shellstep test cannot be run in wercker as the lack of a terminal causes it to fail with "invalid ioctl"
     basicTest "shellstep" build --docker-local --enable-dev-steps "$testsDir/shellstep" || return 1
@@ -145,8 +135,7 @@ echo pipeline used container $containerID and network $network
 
   basicTest "source-path"       build "$testsDir/source-path" --docker-local || return 1
   # The source-path test messes up subsequent tests, so clean out its working directory
-  rm -rf "${workingDir}"
-  mkdir -p "$workingDir"
+  rm -rf "${workingDir}"; mkdir -p "$workingDir"
 
   basicTest "rm pipeline --artifacts" build "$testsDir/rm-pipeline" --docker-local --artifacts  || return 1
   basicTest "rm pipeline"       build "$testsDir/rm-pipeline" --docker-local || return 1
@@ -181,15 +170,13 @@ echo pipeline used container $containerID and network $network
   testScratchPush || return 1
 
     # The following test fails if we don't first clean out the working directory
-  rm -rf "${workingDir}"
-  mkdir -p "$workingDir"
+  rm -rf "${workingDir}"; mkdir -p "$workingDir"
 
   # make sure the build successfully completes when cache is too big
   basicTest "cache size too big" build "$testsDir/cache-size" --docker-local || return 1
 
   # The following test fails if we don't first clean out the working directory
-  rm -rf "${workingDir}"
-  mkdir -p "$workingDir"
+  rm -rf "${workingDir}"; mkdir -p "$workingDir"
 
   # make sure the build fails when an artifact is too big
   basicTestFail "artifact size too big" build "$testsDir/artifact-size" --docker-local --artifacts || return 1
