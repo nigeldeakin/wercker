@@ -97,11 +97,14 @@ testScratchPush () {
 
 runTests() {
 
+  source $testsDir/privileged/test.sh || return 1
+
   # The following tests cannot currently be run in a wercker pipeline
   if [ -z ${WERCKER_ROOT} ]; then 
-    source $testsDir/privileged/test.sh || return 1
     source $testsDir/rdd/test.sh || return 1
     source $testsDir/rdd-volumes/test.sh || return 1
+    basicTest "local services"    build "$testsDir/local-service/service-consumer" --docker-local || return 1
+    # The shellstep test cannot be run in wercker as the lack of a terminal causes it to fail with "invalid ioctl"
     basicTest "shellstep" build --docker-local --enable-dev-steps "$testsDir/shellstep" || return 1
   fi
 
