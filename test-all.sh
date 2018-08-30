@@ -110,21 +110,18 @@ testScratchPush () {
 
 runTests() {
 
-  basicTest "local services"    build "$testsDir/local-service/service-consumer" --docker-local || return 1
-
-  source $testsDir/privileged/test.sh || return 1
-
   # The following tests must be skipped when run in a wercker pipeline 
   if [ -z ${WERCKER_ROOT} ]; then 
     # The rdd tests cannot be run in wercker because the pipeline cannot connect to the daemon
     source $testsDir/rdd/test.sh || return 1
     source $testsDir/rdd-volumes/test.sh || return 1
-    # 
+    # local services test cannot be run in wercker
     basicTest "local services"    build "$testsDir/local-service/service-consumer" --docker-local || return 1
     # The shellstep test cannot be run in wercker as the lack of a terminal causes it to fail with "invalid ioctl"
     basicTest "shellstep" build --docker-local --enable-dev-steps "$testsDir/shellstep" || return 1
   fi
 
+  source $testsDir/privileged/test.sh || return 1
   source $testsDir/enable-volumes/test.sh || return 1
   source $testsDir/direct-mount-test/test.sh || return 1
   source $testsDir/docker-push/test.sh || return 1
@@ -143,7 +140,6 @@ runTests() {
 
   basicTest "rm pipeline --artifacts" build "$testsDir/rm-pipeline" --docker-local --artifacts  || return 1
   basicTest "rm pipeline"       build "$testsDir/rm-pipeline" --docker-local || return 1
-  ###basicTest "local services"    build "$testsDir/local-service/service-consumer" --docker-local || return 1
   basicTest "deploy"            deploy "$testsDir/deploy-no-targets" --docker-local || return 1
   basicTest "deploy target"     deploy "$testsDir/deploy-targets" --docker-local  --deploy-target test || return 1
   basicTest "after steps"       build "$testsDir/after-steps-fail" --docker-local --pipeline build_true  || return 1
