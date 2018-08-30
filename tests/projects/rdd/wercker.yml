@@ -9,16 +9,8 @@ build:
         name: Install Curl
         code: apk --no-cache add curl         
     - script:
-        name: Explore the docker daemon and play with IP
+        name: Explore the docker daemon 
         code: |
-          docker network inspect $DOCKER_NETWORK_NAME
-          echo =======
-          docker network inspect -f '{{range .IPAM.Config}}{{.Gateway}}{{end}}' $DOCKER_NETWORK_NAME
-          export hostip=`docker network inspect -f '{{range .IPAM.Config}}{{.Gateway}}{{end}}' $DOCKER_NETWORK_NAME`
-          # ip route
-          #export hostip=`ip route | awk '/^default/ { print $3 }'`
-          #export hostip=`ip route | awk '/dev/ { print $7 }'`
-          export DOCKER_HOST=${hostip}:2375
           echo DOCKER_NETWORK_NAME=$DOCKER_NETWORK_NAME
           echo DOCKER_HOST=$DOCKER_HOST
           echo TAG=$TAG

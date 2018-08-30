@@ -25,7 +25,6 @@ testRDD () {
   fi
 
   printf "passed\n"
-  cat "${workingDir}/${testName}.log"
   return 0
 }
 
