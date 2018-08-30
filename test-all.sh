@@ -110,6 +110,16 @@ testScratchPush () {
 
 runTests() {
 
+basicTest "local services"    build "$testsDir/local-service/service-consumer" --docker-local --no-remove || return 1
+docker ps -a 
+containerID=`docker ps -a | grep wercker-service | awk '{print $1}'`
+network=`docker inspect $containerID | grep NetworkID | awk '{print $2}' | sed "s/\"//g" | sed "s/,//g"`
+echo service used container $containerID and network $network
+
+containerID=`docker ps -a | grep wercker-pipeline | awk '{print $1}'`
+network=`docker inspect $containerID | grep NetworkID | awk '{print $2}' | sed "s/\"//g" | sed "s/,//g"`
+echo pipeline used container $containerID and network $network
+
   #  The following tests must be skipped when run in a wercker pipeline 
   if [ -z ${WERCKER_ROOT} ]; then 
     # The rdd tests cannot be run in wercker because the pipeline cannot connect to the daemon
