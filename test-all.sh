@@ -110,7 +110,7 @@ testScratchPush () {
 
 runTests() {
 
-basicTest "local services"    build "$testsDir/local-service/service-consumer" --docker-local --no-remove || return 1
+basicTest "local services"    build "$testsDir/local-service/service-consumer" --docker-local --no-remove 
 docker ps -a 
 containerID=`docker ps -a | grep wercker-service | awk '{print $1}'`
 network=`docker inspect $containerID | grep NetworkID | awk '{print $2}' | sed "s/\"//g" | sed "s/,//g"`
