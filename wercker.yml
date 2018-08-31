@@ -111,7 +111,7 @@ integration-tests:
             docker ps
             docker info
             echo Information about the new daemon
-            export DOCKER_HOST=tcp://127.0.0.1:2375
+            export DOCKER_HOST=/var/run/docker.sock
             echo DOCKER_HOST=$DOCKER_HOST
             docker version
             docker ps    
