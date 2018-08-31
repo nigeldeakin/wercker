@@ -96,7 +96,6 @@ build:
         name: Copy source code for use by integration-tests pipeline
         code: |
             cp -r /go $WERCKER_OUTPUT_DIR
-            ls $WERCKER_OUTPUT_DIR   
 
 integration-tests:
   box: docker:dind
@@ -110,7 +109,7 @@ integration-tests:
             $GOPATH/src/github.com/wercker/wercker/wercker --version            
 
     - script:
-        name: integration-tests
+        name: Start docker daemon
         code: |
             dockerd --storage-driver=overlay &
             echo Information about the main daemon
