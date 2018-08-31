@@ -102,9 +102,9 @@ integration-tests:
             $GOPATH/src/github.com/wercker/wercker/wercker --version            
 
     - script:
-        name: Start the docker daemon
+        name: integration-tests
         code: |
-            dockerd --host=tcp://0.0.0.0:2375 --storage-driver=overlay &
+            dockerd --storage-driver=overlay &
             echo Information about the main daemon
             echo DOCKER_HOST=$DOCKER_HOST
             docker version
