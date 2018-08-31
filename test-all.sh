@@ -110,21 +110,16 @@ testScratchPush () {
 
 runTests() {
 
-  source $testsDir/rdd/test.sh || return 1
-  source $testsDir/rdd-volumes/test.sh || return 1
-  basicTest "local services"    build "$testsDir/local-service/service-consumer" --docker-local || return 1
-
   #  The following tests must be skipped when run in a wercker pipeline 
   if [ -z ${WERCKER_ROOT} ]; then 
-    # The rdd tests cannot be run in wercker because the pipeline cannot connect to the daemon
-    source $testsDir/rdd/test.sh || return 1
-    source $testsDir/rdd-volumes/test.sh || return 1
     # local services test cannot be run in wercker because the pipeline cannot connect to the local service (despite being in the same network)
     basicTest "local services"    build "$testsDir/local-service/service-consumer" --docker-local || return 1
     # The shellstep test cannot be run in wercker as the lack of a terminal causes it to fail with "invalid ioctl"
     basicTest "shellstep" build --docker-local --enable-dev-steps "$testsDir/shellstep" || return 1
   fi
 
+  source $testsDir/rdd/test.sh || return 1
+  source $testsDir/rdd-volumes/test.sh || return 1
   source $testsDir/privileged/test.sh || return 1
   source $testsDir/enable-volumes/test.sh || return 1
   source $testsDir/direct-mount-test/test.sh || return 1
