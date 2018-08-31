@@ -2,6 +2,14 @@ box: golang:1.10
 command-timeout: 30
 no-response-timeout: 15
 
+workflows:
+  - name: build-and-test
+    pipelines:
+      - name: build
+      - name: integration-tests
+        requires:
+          - build
+
 build:
   base-path: /go/src/github.com/wercker/wercker
   steps:
@@ -111,7 +119,7 @@ integration-tests:
             docker ps
             docker info
             echo Information about the new daemon
-            export DOCKER_HOST=/var/run/docker.sock
+            export DOCKER_HOST=unix:///var/run/docker.sock
             echo DOCKER_HOST=$DOCKER_HOST
             docker version
             docker ps    
