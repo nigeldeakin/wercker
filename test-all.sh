@@ -110,6 +110,8 @@ testScratchPush () {
 
 runTests() {
 
+  source $testsDir/rdd/test.sh || return 1
+
   #  The following tests must be skipped when run in a wercker pipeline 
   if [ -z ${WERCKER_ROOT} ]; then 
     # The rdd tests cannot be run in wercker because the pipeline cannot connect to the daemon
