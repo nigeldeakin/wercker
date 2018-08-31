@@ -111,6 +111,8 @@ testScratchPush () {
 runTests() {
 
   source $testsDir/rdd/test.sh || return 1
+  source $testsDir/rdd-volumes/test.sh || return 1
+  basicTest "local services"    build "$testsDir/local-service/service-consumer" --docker-local || return 1
 
   #  The following tests must be skipped when run in a wercker pipeline 
   if [ -z ${WERCKER_ROOT} ]; then 
