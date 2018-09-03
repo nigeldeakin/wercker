@@ -10,6 +10,7 @@ workflows:
         requires:
           - build
 
+#
 build:
   base-path: /go/src/github.com/wercker/wercker
   steps:
